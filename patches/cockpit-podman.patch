@@ -1,0 +1,22 @@
+diff --git a/Makefile b/Makefile
+index c413128..c969809 100644
+--- a/Makefile
++++ b/Makefile
+@@ -9,7 +9,7 @@ export TEST_OS
+ TARFILE=$(RPM_NAME)-$(VERSION).tar.xz
+ NODE_CACHE=$(RPM_NAME)-node-$(VERSION).tar.xz
+ SPEC=$(RPM_NAME).spec
+-PREFIX ?= /usr/local
++PREFIX ?= /usr
+ APPSTREAMFILE=org.cockpit_project.$(PACKAGE_NAME).metainfo.xml
+ VM_IMAGE=$(CURDIR)/test/images/$(TEST_OS)
+ # stamp file to check for node_modules/
+@@ -66,7 +66,7 @@ $(COCKPIT_REPO_FILES): $(COCKPIT_REPO_STAMP)
+ COCKPIT_REPO_TREE = '$(strip $(COCKPIT_REPO_COMMIT))^{tree}'
+ $(COCKPIT_REPO_STAMP): Makefile
+ 	@git rev-list --quiet --objects $(COCKPIT_REPO_TREE) -- 2>/dev/null || \
+-	    git fetch --no-tags --no-write-fetch-head --depth=1 $(COCKPIT_REPO_URL) $(COCKPIT_REPO_COMMIT)
++	    git fetch --no-tags --depth=1 $(COCKPIT_REPO_URL) $(COCKPIT_REPO_COMMIT)
+ 	git archive $(COCKPIT_REPO_TREE) -- $(COCKPIT_REPO_FILES) | tar x
+ 
+ #
