@@ -37,7 +37,7 @@ sudo docker info | grep nvidia
 ```
 
 You also need to configure podman in order to have the correct runtime(s) available.
-In order to do this you can edit the file in `/usr/share/containers/containers.conf` 
+In order to do this you can edit the file in `/usr/share/containers/containers.conf`
 Under the `[engine.runtimes]` section simply uncomment crun:
 ```conf
 crun = [
@@ -56,25 +56,28 @@ Have a look at [containers.conf](.config/containers/containers.conf) for an exam
 
 ### Start the service(s)
 podman-compose has commands to setup unit files for the services you wish to start on boot.
-cockpit-podman however has no support for users, it will only use the root socket for the containers, so the only solution is to run the containers as root and pass the uid and gid to the containers.
+```bash
+podman-compose systemd -a create-unit
+podman-compose systemd -a register # for each service you wish to run
+```
 
-podman-compose's commands to setup unit files doesn't work on root, so you could run the commands as any user and just move/copy the files.
-
-[podman-compose@.service](./units/podman-compose@.service) will look for `~/.config/containers/compose/projects/*.env` files and automatically add a service for each file that exist there, since the service has to be run as root `~/` will be `/root/`.
+[podman-compose@.service](./units/podman-compose@.service) will look for `~/.config/containers/compose/projects/*.env` files and automatically add a service for each file that exist there.
 
 The .env files are very simple, they just tell the service which files to use
 ```
-COMPOSE_PROJECT_DIR=/home/xavier/podman/dashy
-COMPOSE_FILE=dashy.yaml
+COMPOSE_PROJECT_DIR=/home/xavier/podman/homepage
+COMPOSE_FILE=homepage.yaml
 COMPOSE_PATH_SEPARATOR=:
-COMPOSE_PROJECT_NAME=dashy
+COMPOSE_PROJECT_NAME=homepage
 ```
 
 ```bash
 # You need to run this for each service you wish to run on boot
-systemctl enable podman-compose@dashy
-systemctl start podman-compose@dashy
+systemctl --user enable podman-compose@homepage
+systemctl --user start podman-compose@homepage
 ```
+
+I still haven't figured out how to have podman rootless working with runtime nvidia so the jellyfin-jetson container has to be ran as root, while the standard jellyfin image doesn't have to be.
 
 ## Cockpit
 ```bash
@@ -120,4 +123,42 @@ make
 systemctl enable cockpit
 systemctl start cockpit
 ```
+
+## Services
+### Jellyfin
+Jellyfin's patched ffmpeg has no hardware codec support on Jetson boards.
+
+You need [jellyfin-ffmpeg-jetson](https://github.com/mguzzina/jellyfin-ffmpeg-jetson), you can follow its build and installation guide:
+
+Install requirements
+```bash
+sudo apt-get install -y cuda nvidia-l4t-jetson-multimedia-api cmake
+```
+
+Build jellyfin-ffmpeg-jetson
+```bash
+git clone https://github.com/mguzzina/jellyfin-ffmpeg-jetson.giti -b v7.1.3-1-jetson
+cd jellyfin-ffmpeg-jetson
+mkdir dist
+./build r35.3.1 arm64-native dist
+```
+You should find a .deb file in the dist directory.
+
+Build jellyfin-packaging-jetson
+```bash
+git clone https://github.com/mguzzina/jellyfin-packaging-jetson.git
+cd jellyfin-packaging-jetson
+./build.py 10.11.5 nvcr.io/nvidia/l4t-jetpack arm64 r35.3.1
+```
+You should find three .deb files in the out/nvcr.io/nvidia/l4t-jetpack directory.
+
+To build the docker image you need to copy the deb files `jellyfin-web_*.deb`, `jellyfin-server_*.deb` and `jellyfin-ffmpeg*_*.deb` in jellyfin/debs.
+```bash
+cd jellyfin/debs
+ghlight ExtraWhitespace ctermbg=red guibg=red
+podman build -t jellyfin-jetson .
+```
+
+Since the jetson addition is not officially supported, you should really have the double option of standard image and nvmpi one.
+In jellyfin/ you can find a jellyfin.yaml and a jellyfin-jetson.yaml as well as the two respective unit files in units/.
 

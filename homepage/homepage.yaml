@@ -1,0 +1,17 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    network_mode: host
+    privileged: true # otherwise storage doesn't workd
+    environment:
+      PORT: 8080
+      HOMEPAGE_ALLOWED_HOSTS: xavier.local:8080,xavier:8080,localhost:8080
+      PUID: 1000
+      PGID: 1000
+    volumes:
+      - ./config:/app/config # Make sure your local config directory exists
+      - /nas/0/empty:/empty # In order for storage to work we need to mound an actual directory from each disk
+      #- /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
+

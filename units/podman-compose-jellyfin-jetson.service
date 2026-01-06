@@ -1,0 +1,17 @@
+# /etc/systemd/system/podman-compose-jellyfin-jetson.service
+
+[Unit]
+Description=jellyfin-jetson rootless jellyfin pod (podman-compose)
+# Doesn't actually work if one is user and the other one is root
+Conflicts=podman-compose-jellyfin-standard.service
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/containers/compose/projects/jellyfin/jetson.env
+ExecStartPre=-/usr/local/bin/podman-compose up --no-start
+ExecStartPre=/usr/bin/env podman pod start pod_jellyfin-jetson
+ExecStart=/usr/local/bin/podman-compose wait
+ExecStop=/usr/bin/env podman pod stop pod_jellyfin-jetson
+
+[Install]
+#WantedBy=default.target

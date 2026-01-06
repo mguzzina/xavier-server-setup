@@ -1,0 +1,11 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/settings/
+
+title: Xavier
+description: Home server for our family
+
+providers:
+  openweathermap: openweathermapapikey
+  weatherapi: weatherapiapikey
+

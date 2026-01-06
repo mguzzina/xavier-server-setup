@@ -1,0 +1,25 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/configs/info-widgets/
+
+- resources:
+    label: System
+    cpu: true
+    memory: true
+    cputemp: true
+    uptime: true
+    units: metric
+    refresh: 3000
+    network: true
+
+- resources:
+    label: Storage
+    expanded: true
+    disk:
+      - /app/config
+      - /
+      - /empty
+
+- search:
+    provider: duckduckgo
+    target: _blank

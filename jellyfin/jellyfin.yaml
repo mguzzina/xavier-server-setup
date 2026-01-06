@@ -4,17 +4,17 @@ services:
 
     container_name: jellyfin
 
-    user: "1000:1000"
+    #user: "1000:1000"
 
-    runtime: nvidia
+    #runtime: nvidia
 
     network_mode: host
 
     restart: unless-stopped
 
     environment:
-      NVIDIA_VISIBLE_DEVICES: all
-      NVIDIA_DRIVER_CAPABILITIES: all
+      #NVIDIA_VISIBLE_DEVICES: all
+      #NVIDIA_DRIVER_CAPABILITIES: all
       JELLYFIN_CACHE_DIR: /var/cache/jellyfin
       JELLYFIN_CONFIG_DIR: /etc/jellyfin
       JELLYFIN_DATA_DIR: /var/lib/jellyfin
@@ -25,12 +25,6 @@ services:
       - /data/jellyfin/config:/etc/jellyfin
       - /data/jellyfin/lib:/var/lib/jellyfin
       - /var/log/jellyfin:/var/log/jellyfin
-      - type: bind
-        source: /nas/0/movies
-        target: /media/movies
-        read_only: true
-      - type: bind
-        source: /nas/0/shows
-        target: /media/shows
-        read_only: true
+      - /nas/0/movies:/media/movies:ro
+      - /nas/0/shows:/media/shows:ro
 

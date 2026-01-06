@@ -1,0 +1,28 @@
+
+---
+
+# https://gethomepage.dev/configs/services/
+
+- Enjoy:
+  - jellyfin:
+      icon: jellyfin.png
+      href: http://xavier.local:8096/
+      description: Movies and shows
+      widget:
+        type: jellyfin
+        url: http://localhost:8096/
+        key: 53f1ffd4cc4a432691798dbb2498cdbb
+        enableBlocks: true # optional, defaults to false
+        enableNowPlaying: true # optional, defaults to true
+        enableUser: true # optional, defaults to false
+        enableMediaControl: false # optional, defaults to true
+        showEpisodeNumber: true # optional, defaults to false
+        expandOneStreamToTwoRows: false # optional, defaults to true
+  - homeassistant:
+      icon: home-assistant.png
+      href: http://homeassistant.local:8123/
+      description: Home assistant
+  - cockpit:
+      icon: cockpit-light.svg
+      href: http://xavier.local:9090
+      description: Cockpit
