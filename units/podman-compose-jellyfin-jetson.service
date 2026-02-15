@@ -2,7 +2,6 @@
 
 [Unit]
 Description=jellyfin-jetson rootless jellyfin pod (podman-compose)
-# Doesn't actually work if one is user and the other one is root
 Conflicts=podman-compose-jellyfin-standard.service
 
 [Service]

@@ -1,0 +1,11 @@
+[Unit]
+Description=Automount DAS 0
+After=local-fs.target
+
+[Automount]
+Where=/nas/0
+TimeoutIdleSec=0
+
+[Install]
+WantedBy=local-fs.target
+

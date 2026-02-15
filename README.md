@@ -148,16 +148,11 @@ Build jellyfin-packaging-jetson
 ```bash
 git clone https://github.com/mguzzina/jellyfin-packaging-jetson.git
 cd jellyfin-packaging-jetson
-./build.py 10.11.5 nvcr.io/nvidia/l4t-jetpack arm64 r35.3.1
+cp <path-to-ffmpeg-deb> ./debs
+./build.py 10.11.5 docker jetson --local
 ```
-You should find three .deb files in the out/nvcr.io/nvidia/l4t-jetpack directory.
 
-To build the docker image you need to copy the deb files `jellyfin-web_*.deb`, `jellyfin-server_*.deb` and `jellyfin-ffmpeg*_*.deb` in jellyfin/debs.
-```bash
-cd jellyfin/debs
-ghlight ExtraWhitespace ctermbg=red guibg=red
-podman build -t jellyfin-jetson .
-```
+This will build a docker image similar to the official debian one, except with added nvmpi support.
 
 Since the jetson addition is not officially supported, you should really have the double option of standard image and nvmpi one.
 In jellyfin/ you can find a jellyfin.yaml and a jellyfin-jetson.yaml as well as the two respective unit files in units/.

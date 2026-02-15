@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount DAS 0
+After=local-fs.target
+
+[Mount]
+What=/dev/disk/by-uuid/70d6a0b4-80f7-47ec-8e88-a2759d1bb24d
+Where=/nas/0
+Type=ext4
+Options=defaults
+
+[Install]
+WantedBy=local-fs.target
+

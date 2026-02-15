@@ -1,16 +1,18 @@
 # /etc/systemd/system/podman-compose@.service
 
 [Unit]
-Description=%i root pod (podman-compose)
-Requires=nas-0.mount
+Description=%i rootless pod (podman-compose)
 
 [Service]
 Type=simple
+User=xavier
+Group=xavier
 EnvironmentFile=%h/.config/containers/compose/projects/%i.env
 ExecStartPre=-/usr/local/bin/podman-compose up --no-start
 ExecStartPre=/usr/bin/env podman pod start pod_%i
 ExecStart=/usr/local/bin/podman-compose wait
 ExecStop=/usr/bin/env podman pod stop pod_%i
+Restart=always
 
 [Install]
 WantedBy=default.target

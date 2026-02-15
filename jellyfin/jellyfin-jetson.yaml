@@ -1,6 +1,6 @@
 services:
   jellyfin:
-    image: jellyfin-jetson
+    image: jellyfin/jellyfin:10.11.5-jetson
     #entrypoint: ["/bin/bash", "-c", "jellyfin"]
 
     container_name: jellyfin-jetson
@@ -22,18 +22,12 @@ services:
       JELLYFIN_LOG_DIR: /var/log/jellyfin
 
     volumes:
-      - /data/jellyfin/cache:/var/cache/jellyfin
-      - /data/jellyfin/config:/etc/jellyfin
-      - /data/jellyfin/lib:/var/lib/jellyfin
-      - /var/log/jellyfin:/var/log/jellyfin
-      - type: bind
-        source: /nas/0/movies
-        target: /media/movies
-        read_only: true
-      - type: bind
-        source: /nas/0/shows
-        target: /media/shows
-        read_only: true
+      - /data/jellyfin-jetson/cache:/var/cache/jellyfin
+      - /data/jellyfin-jetson/config:/etc/jellyfin
+      - /data/jellyfin-jetson/lib:/var/lib/jellyfin
+      - /var/log/jellyfin-jetson:/var/log/jellyfin
+      - /nas/0/movies:/media/movies:ro
+      - /nas/0/shows:/media/shows:ro
 
     #healthcheck:
       #test: ["CMD", "curl", "--noproxy", "\"localhost\"", "-Lk", "-fsS", "\"http://localhost:8096/health\""]
