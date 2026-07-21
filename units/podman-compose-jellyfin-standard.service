@@ -4,6 +4,7 @@
 Description=jellyfin rootless jellyfin pod (podman-compose)
 Conflicts=podman-compose-jellyfin-jetson.service
 After=nas-0.mount
+After=network.target
 Requires=nas-0.mount
 
 [Service]
@@ -16,6 +17,8 @@ ExecStartPre=/usr/bin/env podman pod start pod_jellyfin
 ExecStart=/usr/local/bin/podman-compose wait
 ExecStop=/usr/bin/env podman pod stop pod_jellyfin
 Restart=always
+RestartSec=10s
+StartLimitIntervalSec=0
 
 [Install]
 WantedBy=default.target
